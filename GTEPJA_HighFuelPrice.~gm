@@ -150,6 +150,35 @@ par=ScalarParams  rng=par_Scalar!B3:C12    rdim=1
 par=CalData   rng=par_CalData!B3:C9      rdim=1
 $offecho
 
+*$call GDXXRW input_gtepja_2019-02-06.xlsx @gtepinput.txt
+*$GDXIN input_gtepja_2019-02-06.gdx
+
+*$CALL GDXXRW input_gtepja_2019-02-21.xlsx @gtepinput.txt
+*$GDXIN input_gtepja_2019-02-21.gdx
+
+*$CALL GDXXRW input_gtepja_2019-02-28.xlsx @gtepinput.txt
+*$GDXIN input_gtepja_2019-02-28.gdx
+
+*$CALL GDXXRW input_gtepja_2019-04-10.xlsx @gtepinput.txt
+*$GDXIN input_gtepja_2019-04-10.gdx
+
+*$CALL GDXXRW input_gtepja_DisAggTest_2019-08-28.xlsx @gtepinput.txt
+*$GDXIN input_gtepja_DisAggTest_2019-08-28.gdx
+
+*$CALL GDXXRW input_gtepja_DisAggTest_2019-10-09.xlsx @gtepinput.txt
+*$GDXIN input_gtepja_DisAggTest_2019-10-09.gdx
+
+*$CALL GDXXRW input_gtepja_DisAggTest_2019-10-14.xlsx @gtepinput.txt
+*$GDXIN input_gtepja_DisAggTest_2019-10-14.gdx
+
+*$CALL GDXXRW input_gtepja_Final_2019-10-24.xlsx @gtepinput.txt
+*$GDXIN input_gtepja_Final_2019-10-24.gdx
+
+*$CALL GDXXRW input_gtepja_Final_2020-01-21.xlsx @gtepinput.txt
+*$GDXIN input_gtepja_Final_2020-01-21.gdx
+
+*$CALL GDXXRW input_gtepja_Final_2020-02-06_disc1195.xlsx @gtepinput.txt
+*$GDXIN input_gtepja_Final_2020-02-06_disc1195.gdx
 
 $CALL GDXXRW Input_GTEPJA_Anonymized.xlsx @gtepinput.txt
 $GDXIN Input_GTEPJA_Anonymized.gdx

@@ -150,6 +150,35 @@ par=ScalarParams  rng=par_Scalar!B3:C12    rdim=1
 par=CalData   rng=par_CalData!B3:C9      rdim=1
 $offecho
 
+*$call GDXXRW input_gtepja_2019-02-06.xlsx @gtepinput.txt
+*$GDXIN input_gtepja_2019-02-06.gdx
+
+*$CALL GDXXRW input_gtepja_2019-02-21.xlsx @gtepinput.txt
+*$GDXIN input_gtepja_2019-02-21.gdx
+
+*$CALL GDXXRW input_gtepja_2019-02-28.xlsx @gtepinput.txt
+*$GDXIN input_gtepja_2019-02-28.gdx
+
+*$CALL GDXXRW input_gtepja_2019-04-10.xlsx @gtepinput.txt
+*$GDXIN input_gtepja_2019-04-10.gdx
+
+*$CALL GDXXRW input_gtepja_DisAggTest_2019-08-28.xlsx @gtepinput.txt
+*$GDXIN input_gtepja_DisAggTest_2019-08-28.gdx
+
+*$CALL GDXXRW input_gtepja_DisAggTest_2019-10-09.xlsx @gtepinput.txt
+*$GDXIN input_gtepja_DisAggTest_2019-10-09.gdx
+
+*$CALL GDXXRW input_gtepja_DisAggTest_2019-10-14.xlsx @gtepinput.txt
+*$GDXIN input_gtepja_DisAggTest_2019-10-14.gdx
+
+*$CALL GDXXRW input_gtepja_Final_2019-10-24.xlsx @gtepinput.txt
+*$GDXIN input_gtepja_Final_2019-10-24.gdx
+
+*$CALL GDXXRW input_gtepja_Final_2020-01-21.xlsx @gtepinput.txt
+*$GDXIN input_gtepja_Final_2020-01-21.gdx
+
+*$CALL GDXXRW input_gtepja_Final_2020-02-06_disc1195.xlsx @gtepinput.txt
+*$GDXIN input_gtepja_Final_2020-02-06_disc1195.gdx
 
 $CALL GDXXRW Input_GTEPJA_Anonymized.xlsx @gtepinput.txt
 $GDXIN Input_GTEPJA_Anonymized.gdx
@@ -642,13 +671,13 @@ DumpEn.fx(year,quart,dtype,htype,node) =0;
 *=================================================================================
 
 *==============================================
-* HIGH FUEL PRICE SCENARIO
+* BASELINE FUEL PRICE SCENARIO
 *==============================================
 ************************************************************************
 *In this section, I solve models under the baseline fuel price scenario
 ************************************************************************
 
-FuelPrice(year,thermal) = FuelPriceHigh(year,thermal);
+FuelPrice(year,thermal) = FuelPriceBaseline(year,thermal);
 
 *$ONTEXT
 *===============================================
@@ -935,44 +964,44 @@ UEshare(year) = 100*SUM((node,quart,dtype,htype),Mquart(quart)*Mday(dtype)*mth(h
 *Output for model calibration
 *-----------------------------------
 *$ONTEXT
-Execute_unload "Output_GTEPJA_all_CalibrationFullModel_HighFuelPrice.gdx"  opcostx,TotGen,GSnSSD,GHydro,GGT,GCC,NEOX17,JPSCoGen, IPPGen, capfactor, CapFactor2017, CapFactorDiff
-Execute "gdxxrw.exe Output_GTEPJA_all_CalibrationFullModel_HighFuelPrice.gdx par=OpCostX rng=OpCostX!"
-Execute "gdxxrw.exe Output_GTEPJA_all_CalibrationFullModel_HighFuelPrice.gdx Par=TotGen rng=CompareTotGen!"
-Execute "gdxxrw.exe Output_GTEPJA_all_CalibrationFullModel_HighFuelPrice.gdx Par=GSnSSD rng=CompareSnSSD!"
-Execute "gdxxrw.exe Output_GTEPJA_all_CalibrationFullModel_HighFuelPrice.gdx Par=GHydro rng=CompareJPSHydro!"
-Execute "gdxxrw.exe Output_GTEPJA_all_CalibrationFullModel_HighFuelPrice.gdx Par=GGT rng=CompareJPSGGT!"
-Execute "gdxxrw.exe Output_GTEPJA_all_CalibrationFullModel_HighFuelPrice.gdx Par=GCC rng=CompareJPSCC!"
-Execute "gdxxrw.exe Output_GTEPJA_all_CalibrationFullModel_HighFuelPrice.gdx par=NEOX17 rng=Net_Output_Renewable!"
-Execute "gdxxrw.exe Output_GTEPJA_all_CalibrationFullModel_HighFuelPrice.gdx par=JPSCoGen rng=CompareJPSCo!"
-Execute "gdxxrw.exe Output_GTEPJA_all_CalibrationFullModel_HighFuelPrice.gdx par=IPPGen rng=CompareIPPs!"
-Execute "gdxxrw.exe Output_GTEPJA_all_CalibrationFullModel_HighFuelPrice.gdx par=CapFactor2017 rng=SCapFactor2017!"
-Execute "gdxxrw.exe Output_GTEPJA_all_CalibrationFullModel_HighFuelPrice.gdx par=CapFactorDiff rng=SCapFactorDiff!"
+Execute_unload "Output_GTEPJA_all_CalibrationFullModel_BaselineFuelPrice.gdx"  opcostx,TotGen,GSnSSD,GHydro,GGT,GCC,NEOX17,JPSCoGen, IPPGen, capfactor, CapFactor2017, CapFactorDiff
+Execute "gdxxrw.exe Output_GTEPJA_all_CalibrationFullModel_BaselineFuelPrice.gdx par=OpCostX rng=OpCostX!"
+Execute "gdxxrw.exe Output_GTEPJA_all_CalibrationFullModel_BaselineFuelPrice.gdx Par=TotGen rng=CompareTotGen!"
+Execute "gdxxrw.exe Output_GTEPJA_all_CalibrationFullModel_BaselineFuelPrice.gdx Par=GSnSSD rng=CompareSnSSD!"
+Execute "gdxxrw.exe Output_GTEPJA_all_CalibrationFullModel_BaselineFuelPrice.gdx Par=GHydro rng=CompareJPSHydro!"
+Execute "gdxxrw.exe Output_GTEPJA_all_CalibrationFullModel_BaselineFuelPrice.gdx Par=GGT rng=CompareJPSGGT!"
+Execute "gdxxrw.exe Output_GTEPJA_all_CalibrationFullModel_BaselineFuelPrice.gdx Par=GCC rng=CompareJPSCC!"
+Execute "gdxxrw.exe Output_GTEPJA_all_CalibrationFullModel_BaselineFuelPrice.gdx par=NEOX17 rng=Net_Output_Renewable!"
+Execute "gdxxrw.exe Output_GTEPJA_all_CalibrationFullModel_BaselineFuelPrice.gdx par=JPSCoGen rng=CompareJPSCo!"
+Execute "gdxxrw.exe Output_GTEPJA_all_CalibrationFullModel_BaselineFuelPrice.gdx par=IPPGen rng=CompareIPPs!"
+Execute "gdxxrw.exe Output_GTEPJA_all_CalibrationFullModel_BaselineFuelPrice.gdx par=CapFactor2017 rng=SCapFactor2017!"
+Execute "gdxxrw.exe Output_GTEPJA_all_CalibrationFullModel_BaselineFuelPrice.gdx par=CapFactorDiff rng=SCapFactorDiff!"
 *$OFFTEXT
 ;
 *------------------------------------------------------------------------
 *Output Simultaneous model with Loop flow model
 *------------------------------------------------------------------------
 *$ONTEXT
-Execute_unload "Output_GTEPJA_all_simkvl_HighFuelPrice.gdx" stotcost,totcosty, LCOE, powerflow.m, powerflowshare,theta.l,UE.l,uegwh,ueshare,u.l, opcost, SInvcostPlant, SInvcostTline, SBuildplant, SbuildTline,Annual_Generation,GenPortfolio,GenPortfolioShare,capfactor
-Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_HighFuelPrice.gdx par=stotcost rng=STotalCost!"
-Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_HighFuelPrice.gdx par=TotCosty rng=yrlyTotCost!"
-Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_HighFuelPrice.gdx par=LCOE rng=LCOE_centskWh!"
-Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_HighFuelPrice.gdx var=powerflow.m rng=PowerFlowmarginal!"
-Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_HighFuelPrice.gdx par=powerflowshare rng=PowerFlowShare!"
-Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_HighFuelPrice.gdx var=theta.l rng=Theta!"
-Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_HighFuelPrice.gdx var=UE.l rng=Unserved_EnergyMW!"
-Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_HighFuelPrice.gdx Par=UEGWh rng=Unserved_EnergyGWh!"
-Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_HighFuelPrice.gdx Par=UEshare rng=Percent_Unmet_Demand!"
-Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_HighFuelPrice.gdx var=u.l rng=U!"
-Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_HighFuelPrice.gdx par=opcost rng=OpCost_USDM!"
-Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_HighFuelPrice.gdx par=SInvcostPlant rng=InvCostPlant!"
-Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_HighFuelPrice.gdx par=SInvcostTline rng=InvCostTline!"
-Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_HighFuelPrice.gdx par=SBuildPlant rng=BuildPlant!"
-Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_HighFuelPrice.gdx par=SBuildTline rng=BuildTline!"
-Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_HighFuelPrice.gdx par=Annual_Generation rng=Generation_GWh!"
-Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_HighFuelPrice.gdx par=GenPortfolio rng=GenPortfolio_GWh!"
-Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_HighFuelPrice.gdx par=GenPortfolioShare rng=GenPortfolioShare!"
-Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_HighFuelPrice.gdx par=CapFactor rng=SCapFator!"
+Execute_unload "Output_GTEPJA_all_simkvl_BaselineFuelPrice.gdx" stotcost,totcosty, LCOE, powerflow.m, powerflowshare,theta.l,UE.l,uegwh,ueshare,u.l, opcost, SInvcostPlant, SInvcostTline, SBuildplant, SbuildTline,Annual_Generation,GenPortfolio,GenPortfolioShare,capfactor
+Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_BaselineFuelPrice.gdx par=stotcost rng=STotalCost!"
+Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_BaselineFuelPrice.gdx par=TotCosty rng=yrlyTotCost!"
+Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_BaselineFuelPrice.gdx par=LCOE rng=LCOE_centskWh!"
+Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_BaselineFuelPrice.gdx var=powerflow.m rng=PowerFlowmarginal!"
+Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_BaselineFuelPrice.gdx par=powerflowshare rng=PowerFlowShare!"
+Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_BaselineFuelPrice.gdx var=theta.l rng=Theta!"
+Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_BaselineFuelPrice.gdx var=UE.l rng=Unserved_EnergyMW!"
+Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_BaselineFuelPrice.gdx Par=UEGWh rng=Unserved_EnergyGWh!"
+Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_BaselineFuelPrice.gdx Par=UEshare rng=Percent_Unmet_Demand!"
+Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_BaselineFuelPrice.gdx var=u.l rng=U!"
+Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_BaselineFuelPrice.gdx par=opcost rng=OpCost_USDM!"
+Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_BaselineFuelPrice.gdx par=SInvcostPlant rng=InvCostPlant!"
+Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_BaselineFuelPrice.gdx par=SInvcostTline rng=InvCostTline!"
+Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_BaselineFuelPrice.gdx par=SBuildPlant rng=BuildPlant!"
+Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_BaselineFuelPrice.gdx par=SBuildTline rng=BuildTline!"
+Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_BaselineFuelPrice.gdx par=Annual_Generation rng=Generation_GWh!"
+Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_BaselineFuelPrice.gdx par=GenPortfolio rng=GenPortfolio_GWh!"
+Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_BaselineFuelPrice.gdx par=GenPortfolioShare rng=GenPortfolioShare!"
+Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_BaselineFuelPrice.gdx par=CapFactor rng=SCapFator!"
 *$OFFTEXT
 ;
 
@@ -1096,21 +1125,21 @@ CapFactor2017(plant,retecnb,'no_KVL')$PlantType(Plant,retecnb) = Capfactor(plant
 *Output Transportation model
 *------------------------------------------------------------------------
 *$ONTEXT
-Execute_unload "Output_GTEPJA_all_nokvl_HighFuelPrice.gdx" stotcost,totcosty, LCOE, powerflow.m,theta.l, opcost, SInvcostPlant, SInvcostTline, SBuildplant, SbuildTline,Annual_Generation,GenPortfolio,GenPortfolioShare,capfactor
-Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_HighFuelPrice.gdx par=stotcost rng=STotalCost!"
-Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_HighFuelPrice.gdx par=TotCosty rng=yrlyTotCost!"
-Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_HighFuelPrice.gdx par=LCOE rng=LCOE_centskWh!"
-Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_HighFuelPrice.gdx var=powerflow.m rng=PowerFlowmarginal!"
-Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_HighFuelPrice.gdx var=theta.l rng=Theta!"
-Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_HighFuelPrice.gdx par=opcost rng=OpCost_USDM!"
-Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_HighFuelPrice.gdx par=SInvcostPlant rng=InvCostPlant!"
-Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_HighFuelPrice.gdx par=SInvcostTline rng=InvCostTline!"
-Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_HighFuelPrice.gdx par=SBuildPlant rng=BuildPlant!"
-Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_HighFuelPrice.gdx par=SBuildTline rng=BuildTline!"
-Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_HighFuelPrice.gdx par=Annual_Generation rng=Generation_GWh!"
-Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_HighFuelPrice.gdx par=GenPortfolio rng=GenPortfolio_GWh!"
-Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_HighFuelPrice.gdx par=GenPortfolioShare rng=GenPortfolioShare!"
-Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_HighFuelPrice.gdx par=CapFactor rng=SCapFator!"
+Execute_unload "Output_GTEPJA_all_nokvl_BaselineFuelPrice.gdx" stotcost,totcosty, LCOE, powerflow.m,theta.l, opcost, SInvcostPlant, SInvcostTline, SBuildplant, SbuildTline,Annual_Generation,GenPortfolio,GenPortfolioShare,capfactor
+Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_BaselineFuelPrice.gdx par=stotcost rng=STotalCost!"
+Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_BaselineFuelPrice.gdx par=TotCosty rng=yrlyTotCost!"
+Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_BaselineFuelPrice.gdx par=LCOE rng=LCOE_centskWh!"
+Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_BaselineFuelPrice.gdx var=powerflow.m rng=PowerFlowmarginal!"
+Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_BaselineFuelPrice.gdx var=theta.l rng=Theta!"
+Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_BaselineFuelPrice.gdx par=opcost rng=OpCost_USDM!"
+Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_BaselineFuelPrice.gdx par=SInvcostPlant rng=InvCostPlant!"
+Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_BaselineFuelPrice.gdx par=SInvcostTline rng=InvCostTline!"
+Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_BaselineFuelPrice.gdx par=SBuildPlant rng=BuildPlant!"
+Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_BaselineFuelPrice.gdx par=SBuildTline rng=BuildTline!"
+Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_BaselineFuelPrice.gdx par=Annual_Generation rng=Generation_GWh!"
+Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_BaselineFuelPrice.gdx par=GenPortfolio rng=GenPortfolio_GWh!"
+Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_BaselineFuelPrice.gdx par=GenPortfolioShare rng=GenPortfolioShare!"
+Execute "gdxxrw.exe Output_GTEPJA_all_nokvl_BaselineFuelPrice.gdx par=CapFactor rng=SCapFator!"
 *$OFFTEXT
 ;
 
@@ -1167,9 +1196,9 @@ buildPlant.fx(year,Cplant,tec) = BuildPlant.l(year,CPlant,tec);
 
 
 *Writing Output for verification
-Execute_unload "Output_GTEPJA_all_seq_kvl_pt1_HighFuelPrice.gdx"  buildPlant.l, BuildTLine.l
-Execute "gdxxrw.exe Output_GTEPJA_all_seq_kvl_pt1_HighFuelPrice.gdx var=BuildPlant.l rng=BuildPlant!"
-Execute "gdxxrw.exe Output_GTEPJA_all_seq_kvl_pt1_HighFuelPrice.gdx var=BuildTLine.l rng=BuildTLine!"
+Execute_unload "Output_GTEPJA_all_seq_kvl_pt1_BaselineFuelPrice.gdx"  buildPlant.l, BuildTLine.l
+Execute "gdxxrw.exe Output_GTEPJA_all_seq_kvl_pt1_BaselineFuelPrice.gdx var=BuildPlant.l rng=BuildPlant!"
+Execute "gdxxrw.exe Output_GTEPJA_all_seq_kvl_pt1_BaselineFuelPrice.gdx var=BuildTLine.l rng=BuildTLine!"
 
 ;
 *Having fixed plant construction decision, I will now run full model
@@ -1286,18 +1315,18 @@ CapFactor2017(plant,retecnb,'seq_KVL_b')$PlantType(Plant,retecnb) = Capfactor(pl
 *Output for Sequential Model - Baseline Fuel Price Scenario
 *------------------------------------------------------------------------
 *$ONTEXT
-Execute_unload "Output_GTEPJA_all_seqkvlCombined_HighFuelPrice.gdx" stotcost,totcosty, LCOE, powerflow.m, opcost, SInvcostPlant, SInvcostTline, SBuildplant, SbuildTline,Annual_Generation,GenPortfolio,GenPortfolioShare,capfactor
-Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_HighFuelPrice.gdx par=stotcost rng=STotalCost!"
-Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_HighFuelPrice.gdx par=TotCosty rng=yrlyTotCost!"
-Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_HighFuelPrice.gdx par=LCOE rng=LCOE_centskWh!"
-Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_HighFuelPrice.gdx var=powerflow.m rng=PowerFlowmarginal!"
-Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_HighFuelPrice.gdx par=opcost rng=OpCost_USDM!"
-Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_HighFuelPrice.gdx par=SInvcostPlant rng=InvCostPlant!"
-Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_HighFuelPrice.gdx par=SInvcostTline rng=InvCostTline!"
-Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_HighFuelPrice.gdx par=SBuildPlant rng=BuildPlant!"
-Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_HighFuelPrice.gdx par=SBuildTline rng=BuildTline!"
-Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_HighFuelPrice.gdx par=Annual_Generation rng=Generation_GWh!"
-Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_HighFuelPrice.gdx par=GenPortfolio rng=GenPortfolio_GWh!"
-Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_HighFuelPrice.gdx par=GenPortfolioShare rng=GenPortfolioShare!"
-Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_HighFuelPrice.gdx par=CapFactor rng=SCapFator!"
+Execute_unload "Output_GTEPJA_all_seqkvlCombined_BaselineFuelPrice.gdx" stotcost,totcosty, LCOE, powerflow.m, opcost, SInvcostPlant, SInvcostTline, SBuildplant, SbuildTline,Annual_Generation,GenPortfolio,GenPortfolioShare,capfactor
+Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_BaselineFuelPrice.gdx par=stotcost rng=STotalCost!"
+Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_BaselineFuelPrice.gdx par=TotCosty rng=yrlyTotCost!"
+Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_BaselineFuelPrice.gdx par=LCOE rng=LCOE_centskWh!"
+Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_BaselineFuelPrice.gdx var=powerflow.m rng=PowerFlowmarginal!"
+Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_BaselineFuelPrice.gdx par=opcost rng=OpCost_USDM!"
+Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_BaselineFuelPrice.gdx par=SInvcostPlant rng=InvCostPlant!"
+Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_BaselineFuelPrice.gdx par=SInvcostTline rng=InvCostTline!"
+Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_BaselineFuelPrice.gdx par=SBuildPlant rng=BuildPlant!"
+Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_BaselineFuelPrice.gdx par=SBuildTline rng=BuildTline!"
+Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_BaselineFuelPrice.gdx par=Annual_Generation rng=Generation_GWh!"
+Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_BaselineFuelPrice.gdx par=GenPortfolio rng=GenPortfolio_GWh!"
+Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_BaselineFuelPrice.gdx par=GenPortfolioShare rng=GenPortfolioShare!"
+Execute "gdxxrw.exe Output_GTEPJA_all_seqkvlCombined_BaselineFuelPrice.gdx par=CapFactor rng=SCapFator!"
 *$OFFTEXT
