@@ -182,6 +182,16 @@ Parameter cumymap(ayear,y) Years preceding y ;
 cumymap(ayear,y)$(year(ayear) and year(y)) = 1$(ord(ayear) le ord(y)) ;
 Display year,cumymap ;
 
+
+$Ontext
+*=================================================================
+*For use only when Doubling Demand to constrain transmission
+*=================================================================
+Demand(node,ayear,quart,dtype,htype)$(ord(ayear) ge 3) = 2*Demand(node,ayear,quart,dtype,htype);
+PeakDem(ayear,quart)$(ord(ayear) ge 3) = 2*PeakDem(ayear,quart);
+$Offtext
+
+
 *=================================================================
 *Creating Parameters from imported parameter tables
 *=================================================================
