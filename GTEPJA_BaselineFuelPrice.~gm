@@ -1,8 +1,8 @@
 *=======================================================
 * Long term Investment Planning Model for Jamaica
 *======================================================
-Option optca = 0;
-option optcr = 0;
+Option optca = 0.001;
+option optcr = 0.0001;
 
 *========================
 *Defining Sets & Aliases
@@ -52,11 +52,13 @@ Sets
  RETec(Tec)   Renewable Energy Technology set
  RETecnb(tec) Renewable Technology set excluding biomass
  Biomass(tec) Biomass Technology
+ nhre(tec)    Wind and Solar technology
+ hyth(tec)    Hydro and thermal technologies
 
  PlantType(plant,tec) Attaching Plants to technology
  MapPlant(node,Plant) Attaching Plants to nodes
  MapTline(Tline,node,n) Tranmission network mapping nodes to transmission lines
-*note that I have a parameter "MaptTline1" to represent this as well
+
 
  TlineHeadings(*)  Column headings for Tline parameter table
  PlantHeadings(*)  Column headings for Plant parameter table
@@ -64,8 +66,9 @@ Sets
  CalHeadings(*)    Headings for Calibration data;
 
 Sets
-  ModelType Model Type  /calibrate,sim_KVL,seq_KVL_a,seq_KVL_b,no_KVL,RPS/
+  ModelType Model Type  /calibrate,sim_KVL,seq_KVL_a,seq_KVL_b,no_KVL/
   FPScenarios Fuel Price Scenarios /Baseline, High, Low/   ;
+
 *======================
 *Parameters for import
 *======================
@@ -94,7 +97,7 @@ set=hr    rng=Set_Time!D3:AA3    cdim=1
 set=dtype  rng=Set_Time!D4:E4     cdim=1
 set=htype  rng=Set_Time!D5:H5     cdim=1
 set=quart   rng=Set_Time!D6:G6    cdim=1
-set=year    rng=Set_Time!D7:AA7   cdim=1
+set=ayear   rng=Set_Time!D7:AA7   cdim=1
 set=wk      rng=Set_Time!D8:BC8   cdim=1
 
 set=byear   rng=Set_Time!D10      cdim=1
@@ -104,10 +107,10 @@ set=atth    rng=Set_Time!D24:AA25   cdim=2
 
 set=node    rng=Set_Nodes!D2:S2    cdim=1
 set=slackbus rng=Set_Nodes!D3      cdim=1
-set=Plant   rng=Set_Plant!D2:CJ2   cdim=1
+set=Plant   rng=Set_Plant!D2:DJ2   cdim=1
 set=EPlant  rng=Set_Plant!D4:AH4   cdim=1
 set=DecomPlant rng=Set_Plant!D5:M5  cdim=1
-set=CPlant  rng=Set_Plant!D6:BE6   cdim=1
+set=CPlant  rng=Set_Plant!D6:CE6   cdim=1
 set=MustBuildPlant rng=Set_Plant!D7 cdim=1
 set=JPSPlant rng=Set_Plant!D8:Z8   cdim=1
 set=IPPPlant rng=Set_Plant!D9:K9    cdim=1
@@ -126,66 +129,39 @@ set=Thermal rng=Set_tec!D4:F4     cdim=1
 set=RETec   rng=Set_tec!D5:G5     cdim=1
 set=RETecnb  rng=Set_tec!D6:F6    cdim=1
 set=Biomass  rng=Set_tec!D7       cdim=1
+set=nhre     rng=Set_tec!D8:E8    cdim=1
+set=hyth     rng=Set_tec!D9:G9    cdim=1
 
-set=PlantType  rng=Set_PlantType!A3:B87  rdim=2
-set=MapPlant   rng=Set_MapPlant!A3:B87   rdim=2
+set=PlantType  rng=Set_PlantType!A3:B113  rdim=2
+set=MapPlant   rng=Set_MapPlant!A3:B113   rdim=2
 set=MapTline   rng=Set_MapTline!A3:C44   rdim=3
 
 set=TlineHeadings  rng=Par_Tlinedata!B3:J3  cdim=1
 set=PlantHeadings  rng=Par_PlantData!C3:AA3  cdim=1
-set=ScalarHeadings  rng=par_Scalar!B3:B12     rdim=1
+set=ScalarHeadings  rng=par_Scalar!B3:B15     rdim=1
 set=CalHeadings     rng=par_CalData!B3:B9    rdim=1
 
 
 par=TLineData rng=Par_TLineData!A3:J45   cdim=1 rdim=1
-par=PlantData rng=Par_PlantData!A3:AA88  cdim=1 rdim=2
-par=AvailabilityFactor rng=Par_AvailabilityFactor!A3:G54 cdim=1 rdim=2
+par=PlantData rng=Par_PlantData!A3:AA114  cdim=1 rdim=2
+par=AvailabilityFactor rng=Par_AvailabilityFactor!A3:G60 cdim=1 rdim=2
 par=Rainfall  rng=Par_AvgRain!A2:B5   rdim=1
 par=FuelPriceBaseline rng=Par_FuelPriceBaseline!A4:D28   cdim=1 rdim=1
 par=FuelPriceLow   rng = Par_FuelPriceLow!A4:D28   cdim = 1   rdim =1
 par=FuelPriceHigh   rng = Par_FuelPriceHigh!A4:D28   cdim = 1   rdim =1
 par=Demand    rng=par_demand!A2:I1922   cdim=1 rdim=4
 par=Peakdem  rng=Peak_demand_MW!A2:E26  cdim=1 rdim=1
-par=ScalarParams  rng=par_Scalar!B3:C12    rdim=1
-par=CalData   rng=par_CalData!B3:C9      rdim=1
+par=ScalarParams  rng=par_Scalar!B3:C13    rdim=1
+par=CalData   rng=par_CalData!B3:C15      rdim=1
 $offecho
 
-*$call GDXXRW input_gtepja_2019-02-06.xlsx @gtepinput.txt
-*$GDXIN input_gtepja_2019-02-06.gdx
-
-*$CALL GDXXRW input_gtepja_2019-02-21.xlsx @gtepinput.txt
-*$GDXIN input_gtepja_2019-02-21.gdx
-
-*$CALL GDXXRW input_gtepja_2019-02-28.xlsx @gtepinput.txt
-*$GDXIN input_gtepja_2019-02-28.gdx
-
-*$CALL GDXXRW input_gtepja_2019-04-10.xlsx @gtepinput.txt
-*$GDXIN input_gtepja_2019-04-10.gdx
-
-*$CALL GDXXRW input_gtepja_DisAggTest_2019-08-28.xlsx @gtepinput.txt
-*$GDXIN input_gtepja_DisAggTest_2019-08-28.gdx
-
-*$CALL GDXXRW input_gtepja_DisAggTest_2019-10-09.xlsx @gtepinput.txt
-*$GDXIN input_gtepja_DisAggTest_2019-10-09.gdx
-
-*$CALL GDXXRW input_gtepja_DisAggTest_2019-10-14.xlsx @gtepinput.txt
-*$GDXIN input_gtepja_DisAggTest_2019-10-14.gdx
-
-*$CALL GDXXRW input_gtepja_Final_2019-10-24.xlsx @gtepinput.txt
-*$GDXIN input_gtepja_Final_2019-10-24.gdx
-
-*$CALL GDXXRW input_gtepja_Final_2020-01-21.xlsx @gtepinput.txt
-*$GDXIN input_gtepja_Final_2020-01-21.gdx
-
-*$CALL GDXXRW input_gtepja_Final_2020-02-06_disc1195.xlsx @gtepinput.txt
-*$GDXIN input_gtepja_Final_2020-02-06_disc1195.gdx
 
 $CALL GDXXRW Input_GTEPJA_Anonymized.xlsx @gtepinput.txt
 $GDXIN Input_GTEPJA_Anonymized.gdx
-$LOADDC dow,hr,dtype,htype,quart,year,wk,byear,atqwk,attday,atth
+$LOADDC dow,hr,dtype,htype,quart,ayear,wk,byear,atqwk,attday,atth
 $LOADDC node,slackbus,Plant,EPlant,DecomPlant, CPlant, MustBuildPlant, JPSPlant,IPPplant,SnSSDJPS,GTJPS,CCJPS,HydroJPS
 $LOADDC Tline,ETline,CTLine
-$LOAD tec,thermal,retec,retecnb,biomass
+$LOAD tec,thermal,retec,retecnb,biomass,nhre,hyth
 $LOAD PlantType,MapPlant,MapTline
 $LOAD TlineHeadings, PlantHeadings, ScalarHeadings,Calheadings
 $LOAD Tlinedata,PlantData,AvailabilityFactor,Rainfall,FuelPriceBaseline,FuelPriceLow,FuelPriceHigh,Demand,Peakdem,ScalarParams,CalData
@@ -201,11 +177,16 @@ display TlineHeadings, PlantHeadings, ScalarHeadings,CalHeadings;
 display Tlinedata,PlantData,AvailabilityFactor,FuelPrice,Demand,Peakdem,ScalarParams,CalData;
 $offtext
 
+Set year(ayear) ; year(ayear) = yes$(trunc((ord(ayear)+1)/2)*2 eq ord(ayear)+1) ;
+Parameter cumymap(ayear,y) Years preceding y ;
+cumymap(ayear,y)$(year(ayear) and year(y)) = 1$(ord(ayear) le ord(y)) ;
+Display year,cumymap ;
+
 *=================================================================
 *Creating Parameters from imported parameter tables
 *=================================================================
 Parameters
- TLineDistance(Tline)  Length of transmission lines in km
+  TLineDistance(Tline)  Length of transmission lines in km
  Susceptance(TLine)    Susceptance of transmission line in p.u. on 100 MVA
  Reactance(Tline)      Reactance of transmission line in p.u. on 100 MVA
  PFmax(TLine)          Capacity of transmission line (MVA=MW)
@@ -220,7 +201,7 @@ Parameters
  FOrate(Plant,tec)     Forced outage rate
  UFOrate(Plant,tec)    Unforced outage rate
  Hrate(plant,tec)      Heat rate in mmBtu
- FOM(year,plant,tec)   Fixed O&M Cost in $ per year
+ FOM(ayear,plant,tec)   Fixed O&M Cost in $ per year
  VOM(plant,tec)        Variable O&M COst in $ per MWh
  OCCg(plant,tec)       Overnight Capital Cost (OCC) of Plant ($ millions)
  OCCannualP(plant,tec) Annualized OCC of plants ($ millions)
@@ -229,8 +210,8 @@ Parameters
  DecomDate(plant,tec)  Decommission date of plant
  NEO(plant,tec)        Net energy output of plant (in GWh)
 
- InvBudget(year)           Annual investment budget ($ millions)
- AnPeakDem(year)           Annual Peak Demand (MW)
+ InvBudget(ayear)      Annual investment budget ($ millions)
+ AnPeakDem(ayear)      Annual Peak Demand (MW)
 ;
 
 
@@ -276,7 +257,12 @@ Scalars
  pi       assigning pi to 10 dp
  million 1 million
  pubase   Base for per unit conversions
- AvgRainfall Average quarterly rainfall;
+ AvgRainfall Average quarterly rainfall
+ RETarget  Renewable Energy Target
+* ESVOM   Energy Storage variable O&MM Cost ($ per MWh)
+* ESFOM   Energy Storage fixed O&MM Cost ($ per MW-yr)
+* ESOCC   Overnight Capital Cost of Energy Storage system ($ millions per MW)
+;
 
 disc =ScalarParams("disc");
 DumpCost = ScalarParams("DumpCost");
@@ -288,6 +274,10 @@ pi = ScalarParams("pi");
 million = 1E6;
 pubase = ScalarParams("pubase");
 AvgRainfall = sum(quart,Rainfall(quart))/card(quart);
+RETarget = 0.3;
+*ESVOM = ScalarParams("ESVOM");
+*ESFOM = ScalarParams("ESFOM");
+*ESOCC = ScalarParams("ESOCC");
 *Display grosscap,forate,uforate,disc,million,resmarg,AnPeakDem,pubase;
 display AvgRainfall;
 
@@ -372,26 +362,29 @@ Parameters
 *Global Variables & Definition
 *=========================================
 Variable TotCost Net Present Value (USD Millions) of Operation and Investment Costs (Objective);
+
 Variables
- theta(Tline,node,year,quart,dtype,htype) Bus voltage angles (rad)
- PowerFlow(tline,node,n,year,quart,dtype,htype) Power flow across transmission line in MW;
+ theta(Tline,node,ayear,quart,dtype,htype) Bus voltage angles (rad)
+ PowerFlow(tline,node,n,ayear,quart,dtype,htype) Power flow across transmission line in MW;
 
 
 Positive Variables
- U(year,CTline) Slack variable in application of big M method
- UE(year,quart,dtype,htype,node) Average Unserved energy in MW
- DumpEn(year,quart,dtype,htype,node) Average Dumped Enegy MW
- PGG(year,quart,dtype,htype,plant,tec) Power generation in MW
- UMR(year)  Unmet Reserves (MW) each year
- FixedCost(year) Annual Total Fixed O&M Costs (USD)
- InvCostPlant(year) NPV Total Investment Cost (USD Million)  for generation each year
- InvCostTline(year) NPV Total Investment Cost (USD Million)  for transmission each year
-
+ U(ayear,CTline) Slack variable in application of big M method
+ UE(ayear,quart,dtype,htype,node) Average Unserved energy in MW
+ DumpEn(ayear,quart,dtype,htype,node) Average Dumped Enegy MW
+ PGG(ayear,quart,dtype,htype,plant,tec) Power generation in MW
+ UMR(ayear)  Unmet Reserves (MW) each year
+ FixedCost(ayear) Annual Total Fixed O&M Costs (USD)
+ InvCostPlant(ayear) NPV Total Investment Cost (USD Million)  for generation each year
+ InvCostTline(ayear) NPV Total Investment Cost (USD Million)  for transmission each year
+ BuildRE(ayear,CPlant,tec) Number of MW of plant built (used for Solar and Wind only)
 ;
 
+
 Binary Variables
- BuildPlant(year,CPlant,tec) 1 if candidate plant is build at node
- BuildTline(year,CTline)       1 if candidate transmission line is built;
+ BuildPlant(ayear,CPlant,tec) 1 if candidate plant is build at node (will use for Fossil fuel and RoR Hydro only)
+ BuildTline(ayear,CTline)       1 if candidate transmission line is built;
+
 
 *=======================================================
 * Model equations and Definition
@@ -400,8 +393,8 @@ Binary Variables
 *-------------------
 
 Equation objdef Objective function definition;
-objdef..TotCost =E=
- (SUM(year,(
+objdef..TotCost =E= card(ayear)/card(year)*
+ ((SUM(year,(
       (SUM((quart,dtype,htype),Mquart(quart)*Mday(dtype)*mth(htype)*(
 *Fuel & Variable Costs for thermal plants
          SUM((plant,thermal)$PlantType(plant,thermal),PGG(year,quart,dtype,htype,plant,thermal)*
@@ -421,7 +414,7 @@ objdef..TotCost =E=
 *Converting to millions of dollars
  ))/million
 *Adding Investment Costs
- + SUM(year,InvCostPlant(year)) + SUM(year,InvCostTline(year));
+ + SUM(year,InvCostPlant(year)) + SUM(year,InvCostTline(year)));
 
 
 
@@ -434,12 +427,22 @@ Equations
  InvCostTLdef Investment Cost equation definition for transmission lines;
 
 FCostdef(year)..FixedCost(year) =E= SUM((EPlant,tec)$PlantType(Eplant,Tec),FOM(year,EPlant,tec)*AvailableEPlant(year,EPlant,tec))
-                                 +SUM((Cplant,tec),FOM(year,CPlant,tec)*SUM(y$(ord(y) le ord(year)),BuildPlant(y,cplant,tec)));
-*$ontext
-InvCostPdef(year)..InvCostPlant(year) =E= SUM((Cplant,tec)$PlantType(Cplant,tec),OCCg(Cplant,tec)*SUM(y$(ord(y) le ord(year)),BuildPlant(y,cplant,tec))
-                                          *crfg(Cplant,tec))*discf(year);
+*BuildPlant variable will be set to be applicable to only fossil fuel and hydro resources
+                                 + SUM((Cplant,hyth)$PlantType(Cplant,hyth),FOM(year,CPlant,hyth)*SUM(y$(year(y) and cumymap(y,year) eq 1),
+                                       BuildPlant(y,cplant,hyth)))
+*Non-hydro renewable energy fixed costs
+                                 + SUM((CPlant,nhre)$PlantType(Cplant,nhre),FOM(year,Cplant,nhre)*SUM(y$(year(y) and cumymap(y,year) eq 1),
+                                       BuildRE(y,CPlant,nhre)));
 
-InvCostTLdef(year)..InvCostTline(year)=E= SUM(ctline,OCCtl(ctline)*SUM(y$(ord(y) le ord(year)),BuildTline(y,ctline))*crftl(ctline))
+*$ontext
+InvCostPdef(year)..InvCostPlant(year) =E= (
+                                         SUM((Cplant,hyth)$PlantType(CPlant,hyth),OCCg(CPlant,hyth)*SUM(y$(year(y) and cumymap(y,year) eq 1),
+                                            BuildPlant(y,CPlant,hyth))*crfg(Cplant,hyth))
+                                         +SUM((CPlant,nhre)$PlantType(CPlant,nhre),OCCg(CPlant,nhre)*SUM(y$(year(y) and cumymap(y,year) eq 1),
+                                            BuildRE(y,CPlant,nhre))*crfg(Cplant,nhre))
+                                           )*discf(year);
+
+InvCostTLdef(year)..InvCostTline(year)=E= SUM(ctline,OCCtl(ctline)*SUM(y$(year(y) and cumymap(y,year) eq 1),BuildTline(y,ctline))*crftl(ctline))
                                          *discf(year);
 
 
@@ -456,46 +459,60 @@ $offtext
 *--------------------------------------
 *$ontext
 Equations
- POnce  Candidate plant can only be built once
+ POnce  Candidate plant (thermal and hydro) can only be built once
  TLOnce Candidate transmission line can only be built once
 * PlannedPlant Planned construction of plants
 ;
 
 
-POnce(Cplant,tec)$PlantType(CPlant,tec)..SUM(year,BuildPlant(year,CPlant,tec)) =L=1;
+POnce(Cplant,hyth)$PlantType(CPlant,hyth)..SUM(year,BuildPlant(year,CPlant,hyth)) =L=1;
 TLOnce(ctline)..SUM(year,BuildTline(year,ctline)) =L=1;
+
 *Plant that must be built
-BuildPlant.fx(year,MustBuildPlant,tec)$(ord(year)+2016 eq COD(MustBuildPlant,tec)) =1;
-*display BuildPlant.l;
+BuildPlant.fx(ayear,MustBuildPlant,hyth)$(ord(ayear)+2016 eq COD(MustBuildPlant,hyth)) =1;
+BuildPlant.fx(ayear+1,MustBuildPlant,hyth)$(ord(ayear)+2016 eq COD(MustBuildPlant,hyth)) =1;
+
+*I assume that no plants, transmission lines or battery energy storage  will be built before 2019
+BuildPlant.fx(ayear,Cplant,tec)$(ord(ayear) lt 3)=0;
+BuildRE.fx(ayear,Cplant,tec)$(ord(ayear) lt 3)=0;
+Buildtline.fx(ayear,ctline)$(ord(ayear) lt 3)=0;
+
+
+*BuildPlant variable not applicable to nhre units
+BuildPlant.fx(ayear,Cplant,nhre)=0;
+
+*BuildRE variable not applicable to hydro or thermal units
+BuildRE.fx(ayear,Cplant,hyth)=0;
+
+*Ensuring that 37 MW solar plant already scheduled to build will be built
+BuildRE.fx(ayear,"NewSolar","solar")$(ord(ayear)+2016 eq COD("NewSolar","solar")) = 37;
+BuildRE.fx(ayear+1,"NewSolar","solar")$(ord(ayear)+2016 eq COD("NewSolar","solar")) = 37;
+
+
 
 *=============================================================
 *Generation Capacity Constraints
 *=============================================================
 Equations
-* EThermalGen Constraint on existing thermal generation
  CThermalGen Constraint on candidate thermal generation
-* EREGen      Constrain on existing renewable generation
- CREGen      Constraint on candidate renewable generation
+ HydroGen    Constraint on candidate Hydro generation
+ nhreGen     Constraint on candidate wind and solar generation
+ maxnhre     Max MW build for each wind and solar plant
 ;
 
 *---------------
 *Thermal Plants
 *---------------
-$ontext
-EThermalGen(year,quart,dtype,htype,Eplant,thermal)$PlantType(EPlant,thermal)..
-         PGG(year,quart,dtype,htype,Eplant,thermal) =L=
-            AvailableEPlant(year,EPlant,thermal)*GrossCap(EPlant,thermal)
-           *(1-FOrate(EPlant,thermal))*(1-UFOrated(EPlant,thermal,htype));
-$offtext
 *Setting Upper bound on existing thermal generation
 PGG.up(year,quart,dtype,htype,Eplant,thermal)$PlantType(EPlant,thermal)=
             AvailableEPlant(year,EPlant,thermal)*GrossCap(EPlant,thermal)
            *(1-FOrate(EPlant,thermal))*(1-UFOrated(EPlant,thermal,htype));
 
 
+*Setting Upper bound on candidate thermal generation
 CThermalGen(year,quart,dtype,htype,Cplant,thermal)$PlantType(CPlant,thermal)..
          PGG(year,quart,dtype,htype,Cplant,thermal)=L=
-         SUM(y$(ord(y) le ord(year)),BuildPlant(y,cplant,thermal))
+         SUM(y$(year(y) and cumymap(y,year) eq 1),BuildPlant(y,cplant,thermal))
          *GrossCap(CPlant,thermal)*(1-FOrate(CPlant,thermal))
             *(1-UFOrated(CPlant,thermal,htype));
 
@@ -504,32 +521,28 @@ CThermalGen(year,quart,dtype,htype,Cplant,thermal)$PlantType(CPlant,thermal)..
 *------------------------------
 *Renewable Energy Constraints
 *------------------------------
-$Ontext
-EREGen(year,quart,dtype,htype,Eplant,retecnb)$PlantType(EPlant,retecnb)..
-         PGG(year,quart,dtype,htype,Eplant,retecnb) =L=
-          AvailableEPlant(year,EPlant,retecnb)*GrossCap(EPlant,retecnb)
-          *AvailabilityFactor(EPlant,retecnb,htype);
-
-CREGen(year,quart,dtype,htype,Cplant,retecnb)$PlantType(CPlant,retecnb)..
-          PGG(year,quart,dtype,htype,Cplant,retecnb) =L=
-         SUM(y$(ord(y) le ord(year)),BuildPlant(y,Cplant,retecnb))*GrossCap(CPlant,retecnb)
-          *AvailabilityFactor(CPlant,retecnb,htype);
-$Offtext
-$ontext
-EREGen(year,quart,dtype,htype,Eplant,retecnb)$PlantType(EPlant,retecnb)..
-         PGG(year,quart,dtype,htype,Eplant,retecnb) =L=
-          AvailableEPlant(year,EPlant,retecnb)*GrossCap(EPlant,retecnb)
-          *AdjAvailFact2(EPlant,retecnb,quart,htype);
-$offtext
-
+*Upper limit on existing RE resources
 PGG.up(year,quart,dtype,htype,Eplant,retecnb)$PlantType(EPlant,retecnb)=
           AvailableEPlant(year,EPlant,retecnb)*GrossCap(EPlant,retecnb)
           *AdjAvailFact2(EPlant,retecnb,quart,htype);
 
-CREGen(year,quart,dtype,htype,Cplant,retecnb)$PlantType(CPlant,retecnb)..
-          PGG(year,quart,dtype,htype,Cplant,retecnb) =L=
-         SUM(y$(ord(y) le ord(year)),BuildPlant(y,Cplant,retecnb))*GrossCap(CPlant,retecnb)
-          *AdjAvailFact2(CPlant,retecnb,quart,htype);
+*Upper limit on candidate hydro resources
+HydroGen(year,quart,dtype,htype,Cplant,'hydro')$PlantType(CPlant,'hydro')..
+          PGG(year,quart,dtype,htype,Cplant,'hydro') =L=
+         SUM(y$(year(y) and cumymap(y,year) eq 1),BuildPlant(y,Cplant,'hydro'))*GrossCap(CPlant,'hydro')
+          *AdjAvailFact2(CPlant,'hydro',quart,htype);
+
+
+**Upper limit on candidate wind and solar resources
+nhreGen(year,quart,dtype,htype,CPlant,nhre)$PlantType(Cplant,nhre)..
+         PGG(year,quart,dtype,htype,CPlant,nhre) =L=
+               SUM(y$(year(y) and cumymap(y,year) eq 1),BuildRE(y,Cplant,nhre))
+                         *AdjAvailFact2(CPlant,nhre,quart,htype);
+
+*Upper limit on number of MW (solar and wind) for each candidate plant
+maxnhre(CPlant,nhre)$PlantType(CPlant,nhre).. SUM(year,BuildRE(year,CPlant,nhre)) =L= 350;
+
+
 
 *$Ontext
 *------------------------------
@@ -538,20 +551,14 @@ CREGen(year,quart,dtype,htype,Cplant,retecnb)$PlantType(CPlant,retecnb)..
 *Setting Availability Factor for thermal plants to 1
 AvailabilityFactor(plant,thermal,htype)$PlantType(Plant,thermal) = 1;
 AdjAvailFact2(plant,thermal,quart,htype)$PlantType(Plant,thermal) = 1;
-display AvailabilityFactor,AdjAvailFact2;
+*display AvailabilityFactor,AdjAvailFact2;
 
 
 Equation ResMargDef Reserve Margin Constraint;
-$Ontext
-ResMargDef(year)..SUM((EPlant,tec)$PlantType(EPlant,tec),GrossCap(EPlant,tec)*AvailableEPlant(year,EPlant,tec)* AvailabilityFactor(Eplant,tec,'peakh'))
-                         +SUM((Cplant,tec)$PlantType(CPlant,tec),
-                           SUM(y$(ord(y) le ord(year)),BuildPlant(y,Cplant,tec))*GrossCap(Cplant,tec)*AvailabilityFactor(Cplant,tec,'peakh'))
-                           + UMR(year) =g= AnPeakdem(year)*(1+ResMarg);
-$offtext
-
 ResMargDef(year,quart)..SUM((EPlant,tec)$PlantType(EPlant,tec),GrossCap(EPlant,tec)*AvailableEPlant(year,EPlant,tec)* AdjAvailFact2(Eplant,tec,quart,'peakh'))
                          +SUM((Cplant,tec)$PlantType(CPlant,tec),
-                           SUM(y$(ord(y) le ord(year)),BuildPlant(y,Cplant,tec))*GrossCap(Cplant,tec)*AdjAvailFact2(Cplant,tec,quart,'peakh'))
+                           SUM(y$(year(y) and cumymap(y,year) eq 1),BuildPlant(y,Cplant,tec))*GrossCap(Cplant,tec)*AdjAvailFact2(Cplant,tec,quart,'peakh')
+                                 + SUM(y$(year(y) and cumymap(y,year) eq 1),BuildRE(y,Cplant,tec))*GrossCap(Cplant,tec)*AdjAvailFact2(Cplant,tec,quart,'peakh'))
                            + UMR(year) =g= AnPeakdem(year)*(1+ResMarg);
 
 
@@ -561,21 +568,10 @@ ResMargDef(year,quart)..SUM((EPlant,tec)$PlantType(EPlant,tec),GrossCap(EPlant,t
 *For Existing & Candidate Transmission Lines
 *--------------------------------------------
 Equation
-* PFLimitETLine1 Capacity constraint on power flow across existing lines
-* PFLimitETLine2 Capacity constraint on power flow across existing lines
  PFLimitCTLine1 Capacity constraint on power flow across candidate lines
  PFLimitCTLine2 Capacity constraint on power flow across candidate lines
 
 ;
-$ontext
-PFLimitETLine1(ETline,node,n,year,quart,dtype,htype)$MapTline(ETline,node,n)..
-         PowerFlow(ETline,node,n,year,quart,dtype,htype) =L=
-                 PFmax(ETline)/pubase;
-
-PFLimitETLine2(ETline,node,n,year,quart,dtype,htype)$MapTline(ETline,node,n)..
-         PowerFlow(ETline,node,n,year,quart,dtype,htype) =g=
-                 -PFmax(ETline)/pubase;
-$offtext
 
 PowerFlow.up(ETline,node,n,year,quart,dtype,htype)$MapTline(ETline,node,n)=
                  PFmax(ETline)/pubase;
@@ -585,12 +581,12 @@ PowerFlow.lo(ETline,node,n,year,quart,dtype,htype)$MapTline(ETline,node,n)=
 
 PFLimitCTLine1(CTline,node,n,year,quart,dtype,htype)$MapTline(CTline,node,n)..
          PowerFlow(CTline,node,n,year,quart,dtype,htype) =L=
-                 SUM(y$(ord(y) le ord(year)),BuildTline(y,ctline))*PFmax(CTline)/pubase;
+                 SUM(y$(year(y) and cumymap(y,year) eq 1),BuildTline(y,ctline))*PFmax(CTline)/pubase;
 
 
 PFLimitCTLine2(CTline,node,n,year,quart,dtype,htype)$MapTline(CTline,node,n)..
          PowerFlow(CTline,node,n,year,quart,dtype,htype) =g=
-                 -SUM(y$(ord(y) le ord(year)),BuildTline(y,ctline))*PFmax(CTline)/pubase;
+                 -SUM(y$(year(y) and cumymap(y,year) eq 1),BuildTline(y,ctline))*PFmax(CTline)/pubase;
 
 
 
@@ -615,10 +611,10 @@ KVL1(ETline,node,n,year,quart,dtype,htype)$MapTline(ETline,node,n)..
 KVL2(CTline,node,n,year,quart,dtype,htype)$MapTline(CTline,node,n)..
    PowerFlow(CTline,node,n,year,quart,dtype,htype) =E= Bij(CTline)*(
          theta(CTline,node,year,quart,dtype,htype)-theta(CTline,n,year,quart,dtype,htype))
-         + (SUM(y$(ord(y) le ord(year)),BuildTline(y,ctline))-1)*M + U(year,CTLine);
+         + (SUM(y$(year(y) and cumymap(y,year) eq 1),BuildTline(y,ctline))-1)*M + U(year,CTLine);
 
 
-KVL3(year,ctline).. U(year,CTLine) =L=2*(1-SUM(y$(ord(y) le ord(year)),BuildTline(y,ctline)))*M;
+KVL3(year,ctline).. U(year,CTLine) =L=2*(1-SUM(y$(year(y) and cumymap(y,year) eq 1),BuildTline(y,ctline)))*M;
 VAdef1(TLine,node,year,quart,dtype,htype)..theta(TLine,node,year,quart,dtype,htype)=L=pi ;
 VAdef2(TLine,node,year,quart,dtype,htype)..theta(TLine,node,year,quart,dtype,htype)=g=-pi ;
 
@@ -629,12 +625,28 @@ VAdef2(TLine,node,year,quart,dtype,htype)..theta(TLine,node,year,quart,dtype,hty
 Equation PowerBalance Demand must match supply;
 
 PowerBalance(year,quart,dtype,htype,node)..
-         SUM((plant,tec)$(MapPlant(node,plant) and PlantType(Plant,tec)),PGG(year,quart,dtype,htype,plant,tec)/pubase)
+         SUM((plant,tec)$(MapPlant(node,Plant) and PlantType(Plant,tec)),PGG(year,quart,dtype,htype,plant,tec)/pubase)
          + SUM((n,tline),
                  PowerFlow(tline,n,node,year,quart,dtype,htype)$MapTline(tline,n,node)
                  -PowerFlow(tline,node,n,year,quart,dtype,htype)$MapTline(tline,node,n))
           +UE(year,quart,dtype,htype,node)/pubase=E= Demand(node,year,quart,dtype,htype)/pubase;
 
+
+
+
+*===============================================
+* Renewable Portfolio Standard
+*===============================================
+Parameter TotalDemand(ayear) Total Demand MWh;
+TotalDemand(year) = SUM((quart,dtype,htype,node),Mquart(quart)*Mday(dtype)*mth(htype)*Demand(node,year,quart,dtype,htype));
+*display TotalDemand;
+Set RPSPer(ayear) RPS enforcement periods ;
+RPSPer(ayear) = Yes$(year(ayear) and ord(ayear)+2016 ge 2030) ;
+Display RPSPer ;
+
+Equation RPS_cons constraint defining renewable portfolio standard;
+RPS_cons(year)$RPSPer(year)..SUM((quart,dtype,htype,plant,retecnb)$PlantType(Plant,retecnb),
+         Mquart(quart)*Mday(dtype)*mth(htype)*PGG(year,quart,dtype,htype,plant,retecnb)) =g=RETarget*TotalDemand(year);
 
 
 *==========================================
@@ -646,16 +658,10 @@ theta.fx(Tline,slackbus,year,quart,dtype,htype) = 0;
 PGG.fx(year,quart,dtype,htype,plant,biomass) =0;
 
 *Since GT11 was down in 2017 (OUR data) but will be brought back online afterwards (OUR annual report 2017-2018)
-PGG.fx(byear,quart,dtype,htype,"ep13","NG")=0;
-
-*I assume that no plants will be built before 2019
-BuildPlant.fx(year,Cplant,tec)$(ord(year) lt 3)=0;
+PGG.fx(byear,quart,dtype,htype,"Bogue_GT11","NG")=0;
 
 
-*I assume that no new transmission lines will be built before 2019
-Buildtline.fx(year,ctline)$(ord(year) lt 3)=0;
-
-*Fixing unmet energy to zero until pending imprived measure of unmet energy costs.
+*Fixing unmet energy to zero until pending improved measure of unmet energy costs.
 *Cost of generator for unmet energy cost may not be sufficient
 UE.fx(year,quart,dtype,htype,node)=0;
 
@@ -665,7 +671,6 @@ UMR.fx(year) = 0;
 
 *Ensuring no dumped energy
 DumpEn.fx(year,quart,dtype,htype,node) =0;
-
 
 
 *=================================================================================
@@ -695,13 +700,12 @@ objdef,
 FCostdef,InvCostPdef,InvCostTLdef,
 *budget,
 POnce,TLOnce,
-*EThermalGen,
 CThermalGen,
-*EREGen,
-CREGen,ResMargDef,
-*PFLimitETLine1, PFLimitETLine2,
+HydroGen,ResMargDef,
 PFLimitCTLine1, PFLimitCTLine2,
 KVL1, KVL2, KVL3, VAdef1, VAdef2,
+RPS_cons,
+nhreGen, maxnhre,
 PowerBalance
 /;
 option limcol=0;
@@ -713,7 +717,7 @@ nodefileind 3
 $offecho
 *$ONTEXT
 GTEPJA_simKVL.optfile=1 ;
-GTEPJA_simKVL.resLim=604800;
+GTEPJA_simKVL.resLim=60480000;
 Solve GTEPJA_simKVL using MIP minimizing totcost;
 *$OFFTEXT
 
@@ -723,7 +727,9 @@ Solve GTEPJA_simKVL using MIP minimizing totcost;
 *Storing simultaneous KVL outputs in storage parameters
 *---------------------------------------------------------
 STotCost('sim_KVL') = TotCost.l;
-SBuildPlant(year,cplant,tec,'sim_KVL')=BuildPlant.l(year,CPlant,tec);
+SBuildPlant(year,cplant,hyth,'sim_KVL')=BuildPlant.l(year,CPlant,hyth);
+SBuildPlant(year,cplant,nhre,'sim_KVL')=BuildRE.l(year,CPlant,nhre);
+
 SBuildTline(year,ctline,'sim_KVL')=BuildTline.l(year,CTline);
 
 TotCostY(year,'sim_KVL')= (SUM((quart,dtype,htype),Mquart(quart)*Mday(dtype)*mth(htype)*(
@@ -746,6 +752,8 @@ TotCostY(year,'sim_KVL')= (SUM((quart,dtype,htype),Mquart(quart)*Mday(dtype)*mth
  /million
 *Adding Investment Costs
  + InvCostPlant.l(year) + InvCostTline.l(year);
+
+
 
 ***************************************************
 
@@ -1009,7 +1017,7 @@ Execute "gdxxrw.exe Output_GTEPJA_all_simkvl_BaselineFuelPrice.gdx par=CapFactor
 *$ONTEXT
 *===============================================
 * SIMULTANEOUS TRANSPORTATION MODEL
-*(No loop flow) - Baseline Fuel Price Scenario
+*(No loop flow)
 *===============================================
 *****************************************************************
 *In this section, I run the simultaneous model without loop flow
@@ -1022,16 +1030,15 @@ objdef,
 FCostdef,InvCostPdef,InvCostTLdef,
 *budget,
 POnce,TLOnce,
-*EThermalGen,
 CThermalGen,
-*EREGen,
-CREGen,ResMargDef,
-*PFLimitETLine1, PFLimitETLine2,
+HydroGen,ResMargDef,
 PFLimitCTLine1, PFLimitCTLine2,
+RPS_cons,
+nhreGen, maxnhre,
 PowerBalance
 /;
-option limcol=0;
-option limrow=0;
+option limcol=10;
+option limrow=10;
 Option MIP = Cplex;
 $onecho > cplex.opt
 epint 0
@@ -1039,7 +1046,7 @@ nodefileind 3
 $offecho
 *$ONTEXT
 GTEPJA_Transportation.optfile=1 ;
-GTEPJA_Transportation.resLim=604800;
+GTEPJA_Transportation.resLim=60480000;
 Solve GTEPJA_Transportation using MIP minimizing totcost;
 *$OFFTEXT
 
@@ -1048,7 +1055,8 @@ Solve GTEPJA_Transportation using MIP minimizing totcost;
 *Storing Transportation Model outputs in storage parameters
 *---------------------------------------------------------
 STotCost('no_KVL') = TotCost.l;
-SBuildPlant(year,cplant,tec,'no_KVL')=BuildPlant.l(year,CPlant,tec);
+SBuildPlant(year,cplant,hyth,'no_KVL')=BuildPlant.l(year,CPlant,hyth);
+SBuildPlant(year,cplant,nhre,'no_KVL')=BuildRE.l(year,CPlant,nhre);
 SBuildTline(year,ctline,'no_KVL')=BuildTline.l(year,CTline);
 TotCostY(year,'no_KVL')= (SUM((quart,dtype,htype),Mquart(quart)*Mday(dtype)*mth(htype)*(
 *Fuel & Variable Costs for thermal plants
@@ -1172,10 +1180,11 @@ objdef,
 FCostdef,InvCostPdef,InvCostTLdef,
 *budget,
 POnce,TLOnce,
-*EThermalGen,
 CThermalGen,
-*EREGen,
-CREGen,ResMargDef,
+HydroGen,ResMargDef,
+RPS_cons,
+nhreGen,
+maxnhre,
 PowerBalance_seqKVL_1
 /;
 option limcol=0;
@@ -1196,32 +1205,56 @@ buildPlant.fx(year,Cplant,tec) = BuildPlant.l(year,CPlant,tec);
 
 
 *Writing Output for verification
-Execute_unload "Output_GTEPJA_all_seq_kvl_pt1_BaselineFuelPrice.gdx"  buildPlant.l, BuildTLine.l
-Execute "gdxxrw.exe Output_GTEPJA_all_seq_kvl_pt1_BaselineFuelPrice.gdx var=BuildPlant.l rng=BuildPlant!"
-Execute "gdxxrw.exe Output_GTEPJA_all_seq_kvl_pt1_BaselineFuelPrice.gdx var=BuildTLine.l rng=BuildTLine!"
-
+Execute_unload "Output_GTEPJA_all_2021-03-04_seq_kvl_pt1_BaselineFuelPrice_1195_DemAdj.gdx"  buildPlant.l, buildRE.l, BuildTLine.l
+Execute "gdxxrw.exe Output_GTEPJA_all_2021-03-04_seq_kvl_pt1_BaselineFuelPrice_1195_DemAdj.gdx var=BuildPlant.l rng=BuildPlant!"
+Execute "gdxxrw.exe Output_GTEPJA_all_2021-03-04_seq_kvl_pt1_BaselineFuelPrice_1195_DemAdj.gdx var=BuildRE.l rng=BuildRE!"
+Execute "gdxxrw.exe Output_GTEPJA_all_2021-03-04_seq_kvl_pt1_BaselineFuelPrice_1195_DemAdj.gdx var=BuildTLine.l rng=BuildTLine!"
 ;
+
+
+**Setting lower bounds on build variables
+BuildPlant.lo(ayear,Cplant,tec) = round(BuildPlant.l(ayear,CPlant,tec));
+BuildRE.lo(ayear,Cplant,nhre) = BuildRE.l(ayear,CPlant,nhre);
+*BuildES.fx(year,Cplant,nhre) = BuildES.l(year,CPlant,nhre);
+
+
 *Having fixed plant construction decision, I will now run full model
 *===================================================================
 
 *Unfixing build transmission line variable
-BuildTline.lo(year,CTline)=0;
-BuildTline.up(year,CTline)=1;
+BuildTline.lo(ayear,CTline)=0;
+BuildTline.up(ayear,CTline)=1;
+
 *Again assuming that no new transmission lines will be built before 2019
-Buildtline.fx(year,ctline)$(ord(year) lt 3)=0;
+Buildtline.fx(ayear,Ctline)$(ord(ayear) lt 3)=0;
+
+*Again assuming nothing is built in the first 3 years.
+BuildPlant.fx(ayear,Cplant,tec)$(ord(ayear) lt 3)=0;
+BuildRE.fx(ayear,Cplant,tec)$(ord(ayear) lt 3)=0;
+Buildtline.fx(ayear,ctline)$(ord(ayear) lt 3)=0;
+
+
+*Again, BuildPlant variable not applicable to nhre units
+BuildPlant.fx(ayear,Cplant,nhre)=0;
+
+*Again, BuildRE variable not applicable to hydro or thermal units
+BuildRE.fx(ayear,Cplant,hyth)=0;
+
+*Again Ensuring that 37 MW solar plant already scheduled to build will be built
+BuildRE.fx(ayear,"NewSolar","solar")$(ord(ayear)+2016 eq COD("NewSolar","solar")) = 37;
+BuildRE.fx(ayear+1,"NewSolar","solar")$(ord(ayear)+2016 eq COD("NewSolar","solar")) = 37;
 
 Model GTEPJA_seqKVL_b /
 objdef,
 FCostdef,InvCostPdef,InvCostTLdef,
 *budget,
 POnce,TLOnce,
-*EThermalGen,
 CThermalGen,
-*EREGen,
-CREGen,ResMargDef,
-*PFLimitETLine1, PFLimitETLine2,
+HydroGen,ResMargDef,
 PFLimitCTLine1, PFLimitCTLine2,
 KVL1, KVL2, KVL3, VAdef1, VAdef2,
+RPS_cons,
+nhreGen, maxnhre,
 PowerBalance
 /;
 option limcol=0;
@@ -1233,7 +1266,7 @@ nodefileind 3
 $offecho
 *$ONTEXT
 GTEPJA_seqKVL_b.optfile=1;
-GTEPJA_seqKVL_b.resLim=604800;
+GTEPJA_seqKVL_b.resLim=60480000;
 Solve GTEPJA_seqKVL_b using MIP minimizing totcost;
 
 
@@ -1241,7 +1274,8 @@ Solve GTEPJA_seqKVL_b using MIP minimizing totcost;
 *Storing Sequential Model outputs in storage parameters
 *---------------------------------------------------------
 STotCost('seq_KVL_b') = TotCost.l;
-SBuildPlant(year,cplant,tec,'seq_KVL_b')=BuildPlant.l(year,CPlant,tec);
+SBuildPlant(year,cplant,hyth,'seq_KVL_b')=BuildPlant.l(year,CPlant,hyth);
+SBuildPlant(year,cplant,nhre,'seq_KVL_b')=BuildRE.l(year,CPlant,nhre);
 SBuildTline(year,ctline,'seq_KVL_b')=BuildTline.l(year,CTline);
 TotCostY(year,'seq_KVL_b')= (SUM((quart,dtype,htype),Mquart(quart)*Mday(dtype)*mth(htype)*(
 *Fuel & Variable Costs for thermal plants
