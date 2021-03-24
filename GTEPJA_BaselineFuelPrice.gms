@@ -184,9 +184,9 @@ Display year,cumymap ;
 
 
 $Ontext
-*=================================================================
-*For use only when Doubling Demand to constrain transmission
-*=================================================================
+*============================================================================
+*Unfreeze this section only when Doubling Demand to constrain transmission
+*=============================================================================
 Demand(node,ayear,quart,dtype,htype)$(ord(ayear) ge 3) = 2*Demand(node,ayear,quart,dtype,htype);
 PeakDem(ayear,quart)$(ord(ayear) ge 3) = 2*PeakDem(ayear,quart);
 $Offtext
@@ -686,13 +686,17 @@ DumpEn.fx(year,quart,dtype,htype,node) =0;
 *=================================================================================
 
 *==============================================
-* BASELINE FUEL PRICE SCENARIO
+* FUEL PRICE SCENARIO
 *==============================================
 ************************************************************************
-*In this section, I solve models under the baseline fuel price scenario
+*Just below, you can select a given fuel price scenario by
+*commenting out the ones not needed. Here, I run the baseline fuel
+*price scenario.
 ************************************************************************
 
 FuelPrice(year,thermal) = FuelPriceBaseline(year,thermal);
+*FuelPrice(year,thermal) = FuelPriceHigh(year,thermal);
+*FuelPrice(year,thermal) = FuelPriceLow(year,thermal);
 
 *$ONTEXT
 *===============================================
